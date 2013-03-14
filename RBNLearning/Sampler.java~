@@ -1,0 +1,215 @@
+package RBNLearning;
+
+import java.util.*;
+import java.io.*;
+import java.awt.Color;
+import RBNpackage.*;
+import RBNgui.*;
+import RBNExceptions.*;
+import RBNutilities.*;
+import RBNinference.*;
+
+public class Sampler{
+    
+    private Primula myPrimula;
+
+    public Sampler(Primula pr){
+	myPrimula = pr;
+    }
+
+    public SparseRelStruc sampleOneStruc(){
+	BayesConstructor bcons = new BayesConstructor(myPrimula, new Instantiation(), new AtomList());
+	SparseRelStruc result = (myPrimula.getRels()).cloneDomain();
+	Rel[] probRels = myPrimula.getRBN().Rels();
+	
+	for (int i = 0;i<probRels.length;i++){
+	    probRels[i].setColor(new Color(205,205,0));
+	    result.addRelation(probRels[i]);
+	}
+	try{
+	    PFNetwork pfnetw = bcons.constructPFNetwork(Primula.OPTION_NOT_EVIDENCE_CONDITIONED,
+							Primula.OPTION_NOT_QUERY_SPECIFIC,
+							Primula.OPTION_ELIMINATE_ISOLATED_ZERO_NODES);
+
+	    pfnetw.prepareForSampling(EvidenceModule.OPTION_SAMPLEORD_FORWARD,
+				      EvidenceModule.OPTION_NOT_SAMPLE_ADAPTIVE,
+				      new boolean[5],
+				      3, 
+				      new AtomList(), 
+				      1,
+				      1,
+				      null);
+	    pfnetw.sampleInst(0,false);
+
+
+	    for (int i = 0; i<pfnetw.allnodesSize(); i++){
+		//System.out.print("netwnode " + i);
+		if (pfnetw.sampleValAt(i)==1){
+		    result.addTuple(pfnetw.relAt(i), pfnetw.atomAt(i).args());
+		}
+	    }
+	}
+	catch(RBNCompatibilityException e){System.out.println(e);}
+	catch(RBNInconsistentEvidenceException e){System.out.println(e);}
+	catch(RBNCyclicException e){System.out.println(e);}
+	catch(java.io.IOException e){System.out.println(e);};
+
+	
+	return result;
+    }
+
+    /** Samples one Instantiation with a percentage of pcmissing values missing (completely at random) */
+
+    public Instantiation sampleOneInstantiation(double pcmissing){
+	BayesConstructor bcons = new BayesConstructor(myPrimula, new Instantiation(), new AtomList());
+
+	Instantiation result = new Instantiation();
+	double rand;
+
+	try{
+	    PFNetwork pfnetw = bcons.constructPFNetwork(Primula.OPTION_NOT_EVIDENCE_CONDITIONED,
+							Primula.OPTION_NOT_QUERY_SPECIFIC,
+							Primula.OPTION_ELIMINATE_ISOLATED_ZERO_NODES);
+
+	    pfnetw.prepareForSampling(EvidenceModule.OPTION_SAMPLEORD_FORWARD,
+				      EvidenceModule.OPTION_NOT_SAMPLE_ADAPTIVE,
+				      new boolean[5],
+				      3, 
+				      new AtomList(), 
+				      1,
+				      1,
+				      null);
+	    pfnetw.sampleInst(0,false);
+	
+	    for (int i = 0; i<pfnetw.allnodesSize(); i++){
+		rand = Math.random();
+		if (rand >= pcmissing){
+		    if (pfnetw.sampleValAt(i)==1){
+			result.add(pfnetw.relAt(i), pfnetw.atomAt(i).args(),true);
+		    }
+		    else
+			result.add(pfnetw.relAt(i), pfnetw.atomAt(i).args(),false);
+		}
+	    }
+	}
+	catch(RBNCompatibilityException e){System.out.println(e);}
+	catch(RBNInconsistentEvidenceException e){System.out.println(e);}
+	catch(RBNCyclicException e){System.out.println(e);}
+	catch(java.io.IOException e){System.out.println(e);};
+
+	
+	return result;
+    }
+
+    /** Constructs a random graph (given by binary relation 'edge') over
+     * 'size' nodes. Edges are independent with probability 'edgeprob'.
+     * When directed = true then a directed graph is produced.
+     */ 
+    public SparseRelStruc makeRandomGraph(int size, double edgeprob, boolean directed){
+	SparseRelStruc result = new SparseRelStruc(size);
+	Rel edgerel = new Rel("edge",2);
+	result.addRelation(edgerel);
+	double coin;
+	for (int i=0;i<size;i++){
+	    if (!directed){
+		for (int j=0;j<size;j++){
+		    coin = Math.random();
+		    if (coin<edgeprob){
+			int tup[]={i,j};
+			result.addTuple(edgerel, tup);
+		    }
+		}
+	    }
+	    else
+		for (int j=i+1;j<size;j++){
+		    coin = Math.random();
+		    if (coin<edgeprob){
+			int tup[]={i,j};
+			result.addTuple(edgerel, tup);
+		    }
+		}
+	}
+	return result;	
+    }
+
+    /** Constructs a random graph (given by binary relation 'edge') over
+     * 'size' nodes. Edges are independent with probability 'edgeprob'.
+     * Nodes are colored red,blue,green with probabilities redprob,blueprob,(1-redprob-blueprob)
+     */ 
+    public SparseRelStruc makeRandomColoredGraph(int size, double edgeprob,double redprob, double blueprob){
+	SparseRelStruc result = new SparseRelStruc(size);
+	Rel edgerel = new Rel("edge",2);
+	Rel red = new Rel("red",1);
+	Rel blue = new Rel("blue",1);
+	Rel green = new Rel("green",1);
+	result.addRelation(edgerel);
+	result.addRelation(red);
+	result.addRelation(blue);
+	result.addRelation(green);
+	
+	double coin;
+	for (int i=0;i<size;i++){
+	    coin=Math.random();
+	    int tupcol[]={i};
+	    if (coin < redprob)
+		result.addTuple(red,tupcol);
+	    else{
+		if (coin < redprob+blueprob)
+		    result.addTuple(blue,tupcol);
+		else
+		    result.addTuple(green,tupcol);
+	    }
+	    for (int j=0;j<size;j++){
+		coin = Math.random();
+		if (coin<edgeprob){
+		    int tup[]={i,j};
+		    result.addTuple(edgerel, tup);
+		}
+	    }
+	}
+	return result;	
+    }
+
+    /** Constructs a random pedigree-like structure: nodes have either two or zero
+     * parents
+     */
+    public SparseRelStruc makeRandomPedigree(int size, double founderprop){
+	SparseRelStruc result = new SparseRelStruc(size);
+	Rel fathrel = new Rel("father",2);
+	Rel mothrel = new Rel("mother",2);
+	Rel foundrel = new Rel("founder",1);
+	result.addRelation(fathrel);
+	result.addRelation(mothrel);
+	result.addRelation(foundrel);
+	
+	double coin;
+	int firstpar;
+	int secondpar;
+
+	for (int i=0;i<2;i++){
+	    int tup[] = {i};
+	    result.addTuple(foundrel,tup);
+	}
+	for (int i=2;i<size;i++){
+	    coin = Math.random();
+	    if (coin<founderprop){ /* i is a new founder */ 
+		int tup[] = {i};
+		result.addTuple(foundrel,tup);
+	    }
+	    else{
+		firstpar = (int)Math.floor(Math.random()*i);
+		secondpar = firstpar;
+		while (secondpar == firstpar){
+		    secondpar = (int)Math.floor(Math.random()*i);
+		}
+		int tupfp[] = {firstpar,i};
+		int tupsp[] = {secondpar,i};
+		result.addTuple(mothrel,tupfp);
+		result.addTuple(fathrel,tupsp);
+	    }
+	}
+	
+	return result;
+    }
+    
+}

@@ -1,0 +1,345 @@
+package RBNLearning;
+
+import java.util.*;
+import java.io.*;
+import RBNpackage.*;
+import RBNgui.*;
+import RBNExceptions.*;
+import RBNutilities.*;
+import RBNinference.*;
+
+public  class GradientGraphLikelihoodNode extends GradientGraphNode{
+    
+
+
+   /** Encode the possible instantiation values for observed atoms */
+    private Integer trueint;
+    private Integer falseint;
+
+
+    /** Represents the instantiation values of the atoms corresponding to the top-level
+     * probability formulas. instvals has the same size as children. If children.elementAt(i)
+     * repesents an atom which is instantiated to true (false) in the data, then
+     * instvals.elementAt(i)=this.trueint (this.falseint). If children.elementAt(i)
+     * represents an atom which is not instantiated in the data, then 
+     * instvals.elementAt(i) is the indicator node for this atom
+     */
+    private Vector instvals;
+
+    /** The sum of likelihoods for a current set of samples */
+    private double[] likelihoodsum;
+
+    /** The current (likelihood) value represented 
+     * as a pair of doubles to be handled by class SmallDouble
+     */ 
+    double[] likelihood;
+
+    /** Likelihood values for all samples, at current parameter settings */
+    double[][] samplelikelihoods;
+
+    /** Used instead of the standard gradient vector in GradientGraphNode class --
+     * for the likelihood node need gradient as small doubles!*/
+    private double[][] smallgradient;
+
+    /** The sum of gradients for a current set of samples. Array of small doubles */
+    private double[][] gradientsum;
+
+    /** True if the current likelihood values represent the the correct
+     * values for the current settings of parameter and instantiation
+     * values. isEvaluated=false corresponds to value=null for other
+     * GradientGraphNode's
+     */
+    private boolean isEvaluated;
+
+    /* Upper and lower bounds as small doubles on the value of this node given
+     * a current partial evaluation.
+     * Set to [-1,-1] if these bounds have not been evaluated
+     * for the current setting at the indicator nodes
+     */
+    double[][] bounds;
+
+
+    public GradientGraphLikelihoodNode(GradientGraph gg){
+	super(gg);
+	trueint = new Integer(1);
+	falseint = new Integer(0);
+	instvals = new Vector();
+	likelihood = new double[2];
+	likelihoodsum = new double[2];
+	smallgradient = new double[gg.numberOfParameters()][2];
+	gradientsum = new double[gg.numberOfParameters()][2];
+	isEvaluated = false;
+	bounds = new double[2][2];
+    }
+
+    public void addToChildren(GradientGraphProbFormNode ggpfn, boolean tv){
+	children.add(ggpfn);
+	if (tv)
+	    instvals.add(trueint);
+	else 
+	    instvals.add(falseint);
+    }
+
+    public void addToChildren(GradientGraphProbFormNode ggpfn, GradientGraphIndicatorNode ggin){
+	children.add(ggpfn);
+	instvals.add(ggin);
+    }
+
+    /** Computes the likelihood (ignoring those terms that are not dependent
+     * on unknown atoms or parameters)
+     * 
+     * Returns the likelihood[0] component. CAREFUL WITH USING THE RETURN VALUE!
+     */
+    public double evaluate(){
+	likelihood[0]=1.0;
+	likelihood[1]=0.0;
+
+	double childlik;
+
+	for (int i=0;i<children.size();i++){
+	    //System.out.print(getInstVal(i));
+	    if (getInstVal(i)==1){
+		//System.out.println(" evaluate 1 ");
+		childlik = children.elementAt(i).evaluate();
+// 		if (childlik==0){
+// 		    System.out.println("Zero likelihood at child with instval " + getInstVal(i) );
+// 		if (!(instvals.elementAt(i) instanceof Integer))
+// 		    System.out.println("Indicator node " + ((GradientGraphIndicatorNode)instvals.elementAt(i)).name());
+// 		}
+		likelihood = SmallDouble.multiply(likelihood,children.elementAt(i).evaluate());
+	    }
+	    else{
+		//System.out.println(" evaluate 2 ");
+		childlik = children.elementAt(i).evaluate();
+// 		if (childlik==1.0)
+// 		    System.out.println("One likelihood at child with instval" + getInstVal(i) );
+		likelihood = SmallDouble.multiply(likelihood,(1-children.elementAt(i).evaluate()));
+	    }
+	}
+
+	isEvaluated = true;
+	value = likelihood[0];
+	//System.out.println("evaluate(): " + rbnutilities.arrayToString(likelihood));
+	return value;
+    }
+
+
+    /** for compatibility with GradientGraphNode .... */
+    public double evaluateGrad(int param){
+	System.out.println("do not call this method!");
+	return 0;
+    }
+
+    public void evaluateBounds(){
+	if (bounds[0][0]==-1){
+	    //	    System.out.println("likelihoodnode.evaluateBounds");
+	    /* Evaluate bounds at children: */
+	    for (int i=0;i<children.size();i++)
+		children.elementAt(i).evaluateBounds();
+	    double lowbound[] = {1,0};
+	    double uppbound[] = {1,0};
+	    for (int i=0;i<children.size();i++){
+		if (getInstVal(i)==1){
+		    lowbound= SmallDouble.multiply(lowbound,children.elementAt(i).lowerBound());
+		    uppbound= SmallDouble.multiply(uppbound,children.elementAt(i).upperBound());
+		}
+		else{
+		    lowbound= SmallDouble.multiply(lowbound,(1-children.elementAt(i).upperBound()));
+		    uppbound= SmallDouble.multiply(uppbound,(1-children.elementAt(i).lowerBound()));					}
+		}
+	    bounds[0]=lowbound;
+	    bounds[1]=uppbound;
+	}
+    }
+
+
+//     public void evaluateGradients(){
+// 	int minfactor = Integer.MAX_VALUE;
+// 	double[][]smallgradients = new double[gradient.length][2];
+// 	for (int i=0;i<gradient.length;i++){
+// 	    smallgradients[i]=evaluateSmallGrad(i);
+// 	    minfactor=Math.min(minfactor,(int)smallgradients[i][1]);
+// 	}
+// 	for (int i=0;i<gradient.length;i++){
+// 	    smallgradients[i][1]=smallgradients[i][1]-minfactor;
+// 	    gradient[i]=SmallDouble.toStandardDouble(smallgradients[i]);
+// 	}
+//     }
+
+    public void evaluateGradients(){
+	for (int i=0;i<smallgradient.length;i++){
+	    smallgradient[i]=evaluateSmallGrad(i);
+	}
+    }
+
+
+
+    public double[] evaluateSmallGrad(int param){
+	    /* We need the value. If this.value != null it is assumed that this is
+	     * the correct value. If value = null first the
+	     * value has to be computed.
+	     */
+// 	if (!isEvaluated){
+// 	    this.evaluate();
+// 	}
+	this.evaluate();
+	double smallgrad[] = {0,0};
+	if (likelihood[0]!=0){
+	    for (int i=0;i<children.size();i++){
+		if (children.elementAt(i).dependsOn(param))
+		    if (getInstVal(i)==1)
+			smallgrad = SmallDouble.add(smallgrad,
+						    SmallDouble.multiply(SmallDouble.divide(likelihood,
+											    children.elementAt(i).value()),
+									     children.elementAt(i).evaluateGrad(param)
+									     ));
+			else smallgrad = SmallDouble.subtract(smallgrad,
+							SmallDouble.multiply(SmallDouble.divide(likelihood,
+												1-children.elementAt(i).value()),
+									     children.elementAt(i).evaluateGrad(param)
+									     ));
+		}
+	    }
+	    else {
+		//System.out.println("likelihood[0]=0 in evaluate grad");
+	    }
+
+	    return smallgrad;	    
+    }
+
+
+    private int getInstVal(int i){
+	if (instvals.elementAt(i) instanceof Integer)
+	    return (Integer)instvals.elementAt(i);
+	else{
+	    if (((GradientGraphIndicatorNode)instvals.elementAt(i)).getCurrentInst()==-1)
+		System.out.println("Illegal instantiation value!");
+	    return ((GradientGraphIndicatorNode)instvals.elementAt(i)).getCurrentInst();
+	}
+    }
+
+    public double[] gradientsumAsDouble(){
+	double result[] = new double[gradientsum.length];
+	int minfactor = Integer.MAX_VALUE;
+	double[] prelim = new double[2];
+	for (int i=0;i<gradientsum.length;i++)
+	    minfactor=Math.min(minfactor,(int)smallgradient[i][1]);
+	for (int i=0;i<gradientsum.length;i++){
+	    prelim[0]=gradientsum[i][0];
+	    //System.out.print(rbnutilities.arrayToString(prelim)+ " " );
+	    prelim[1]=gradientsum[i][1]-minfactor;
+	    result[i]=SmallDouble.toStandardDouble(prelim);
+	    //System.out.println(result[i]);
+	}
+	return result;
+    }
+
+    public void initSampleLikelihoods(int size, int samplemode){
+	switch (samplemode){
+	case 0: 
+	    samplelikelihoods = new double[size][2];
+	    break;
+	case 1: 
+	    double[][] sll = new double[samplelikelihoods.length+size][2];
+	    for (int i=0;i<samplelikelihoods.length;i++){
+		sll[i][0]=samplelikelihoods[i][0];
+		sll[i][1]=samplelikelihoods[i][1];
+	    }
+	    samplelikelihoods = sll;
+	    break;
+// 	case 2:
+// 	    break;
+	}
+    }
+
+    public double[] likelihood(){
+	return likelihood.clone();
+    }
+
+    public double[] likelihoodsum(){
+	return likelihoodsum.clone();
+    }
+
+
+    public double[] lowerBound(){
+	return bounds[0].clone();
+    }
+
+    public double[] upperBound(){
+	return bounds[1].clone();
+    }
+
+    /** The name of this node. The name identifies the function represented
+     * by a node. 
+     */
+    public String name(){
+	return "Likelihood";
+    }
+
+    public String name(RelStruc A){
+	return name();
+    }
+
+    public int numChildren(){
+	return children.size();
+    }
+
+    public void resetValue(){
+	value = null;
+	likelihood[0]=0;
+	likelihood[1]=0;
+	isEvaluated = false;
+    }
+
+    public void resetSampleValue(){
+	likelihoodsum[0] = 0;
+	likelihoodsum[1] = 0;
+    }
+
+    public void resetSampleGradient(){
+	for (int i=0;i<gradientsum.length;i++){
+	    gradientsum[i][0]=0.0;
+	    gradientsum[i][1]=0.0;
+	}
+    }
+
+    public void resetBounds(){
+	bounds[0][0]=-1;
+	bounds[0][1]=-1;
+	bounds[1][0]=-1;
+	bounds[1][1]=-1;
+	
+    }
+
+    /** Sets the current likelihood value as the likelihood value for the i'th sample */
+    public void setSampleLikelihood(int i){
+	samplelikelihoods[i][0]=likelihood[0];
+	samplelikelihoods[i][1]=likelihood[1];
+    }
+
+    public double[][] getSampleLikelihoods(){
+	return samplelikelihoods;
+    }
+
+     public void showChildren(RelStruc A){
+	System.out.println("***** children :" );
+	for (int i=0;i<children.size();i++)
+	    System.out.println(children.elementAt(i).name(A));
+     }
+	
+    /** updates the likelihoodsum field by adding weight*value
+     */
+    public void updateLikelihood(double weight){
+	likelihoodsum=SmallDouble.add(likelihoodsum,SmallDouble.multiply(likelihood,weight));
+    }
+
+    public void updateGrad(double weight){
+	for (int i=0; i<gradientsum.length; i++){
+	    double[] addthis = new double[2];
+	    //System.out.println("smallgradient[i]: " + rbnutilities.arrayToString(smallgradient[i]));
+	    addthis = SmallDouble.multiply(smallgradient[i],weight);
+	    //System.out.println("addthis: " + rbnutilities.arrayToString(addthis));
+	    gradientsum[i]=SmallDouble.add(gradientsum[i],addthis);
+	}
+    }
+}

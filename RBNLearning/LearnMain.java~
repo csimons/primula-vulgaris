@@ -1,0 +1,392 @@
+package RBNLearning;
+
+import java.util.*;
+import java.io.*;
+import java.text.*;
+import RBNpackage.*;
+import RBNgui.*;
+import RBNio.*;
+import RBNExceptions.*;
+import RBNutilities.*;
+
+public class LearnMain{
+
+    
+    //     private static String model = "4";
+    //     private static double trueparams[]={0.8,0.1};
+
+ //                   private static String model = "9";
+//                    /* Parameters in the sequence 
+//                     * #sprob  
+//                     * #lnora  
+//                     * #tnor1  
+//                     * #tnor2  
+//                     * #lmeana  
+//                     * #tmean1  
+//                     * #tmean2  
+//                     * #tinvsum1  
+//                     * #tinvsum2  
+//                     * #lnorb  
+//                     * #lmeanb  
+//                     * #lnorc  
+//                     * #lmeanc
+//                     */
+//                    private static double trueparams[]={0.6,1.0,0.1,0.6,1.0,0.8,0.1,0.7,0.2,0.0,1.0,0.0,0.0};
+
+//        private static String model = "learn10"; 
+//        private static double trueparams[]={0.7,0.8,0.4,0.7,0.05};
+
+    //     private static String model = "11"; 
+    //     private static double trueparams[]={0.6,0.0};
+
+           private static String model = "learn12"; 
+            private static double trueparams[]={0.8,0.1};
+
+//     private static String model = "learn13"; 
+//     private static double trueparams[]={0.5,0.8,0.1};
+
+//     private static String model = "learn14"; 
+//     private static double trueparams[]={0.5,0.99,0.4,0.6,0.01};
+
+// private static String model = "patterns";     
+//     private static double trueparams[]={0.3,0.0,0.95,0,0.05,0,0,0,0.95,0,0.95,0,0.95,0,0.95,0,0,0,0,0.95,0.95,0.95,0,0,0,0,0,0,0.95};
+
+//     private static String model = "patterns1";   
+//     private static double trueparams[]={0.3,0.0,0.95,0,0.05};
+
+    //private static String struc = "randgraph_col_1000";
+    //   private static String struc = "randgraph_dir_5000";
+    //private static String struc = "randgraph_1000";
+    //     private static String struc = "learn2";
+//     private static String struc = "randpedig_20";
+
+//     private static void loadInputs(Primula pr, String struc){
+// // 	String rbninputfilestring = "/home/jaeger/B/Primula-Develop/New/Primula-beta/Examples/RBNinputs/learn"+model+"_gen.rbn";
+
+// // 	String rstinputfilestring = "/home/jaeger/B/Primula-Develop/New/Primula-beta/Examples/RSTinputs/"+struc+".rst";
+
+// 		String rbninputfilestring = "/home/jaeger/B/Primula-Develop/New/Primula-beta/Examples/RBNinputs/patterns_gen.rbn";
+
+// 		//	File srsfile = new File(rstinputfilestring);
+// 	File rbnfile = new File(rbninputfilestring);
+
+// 	pr.loadRBNFunction(rbnfile);
+// 	// pr.loadSparseRelFile(srsfile);
+// 	pr.newOrdStruc(50);
+
+//     }
+
+    private static void loadRelStruc(Primula pr, String struc){
+	String rstinputfilestring = "/home/jaeger/B/Primula-Develop/New/Primula-beta/Examples/RSTinputs/"+struc+".rst";
+	File srsfile = new File(rstinputfilestring);
+	pr.loadSparseRelFile(srsfile);
+    }
+    
+    private static void loadRelStruc(Primula pr, int dom){
+	pr.newOrdStruc(dom);
+    }
+   
+    public static void main(String[] Args){
+	Primula thisprimula = new Primula();
+ 	Sampler thissampler = new Sampler(thisprimula);
+	
+        /* Set up the logging...*/
+	String logstring = "/home/jaeger/B/Primula-Develop/New/Primula-beta/Logs/logfile";
+	Calendar mycal = new GregorianCalendar();
+	SimpleDateFormat mydateform = new SimpleDateFormat("dd.MM.yyyy'-'HH:mm:ss");
+	
+
+	
+// 	String strucs[]={"randgraph_dir_100_3","randgraph_dir_200_3","randgraph_dir_500_3",
+// 			 "randgraph_dir_1000_3","randgraph_dir_2000_3","randgraph_dir_5000_3"};
+
+	String strucs[]={"randgraph_col_100","randgraph_col_200","randgraph_col_500",
+	"randgraph_col_1000","randgraph_col_2000","randgraph_col_5000"};
+
+/** Only one of strucs or samplesizes is relevant in one experiment*/
+	//String strucs[]={"randgraph_dir_100_3"};
+	//String strucs[]={""};
+	//String strucs[]={"randgraph_col_100"};
+
+// 	String strucs[]={"randpedig_100_0.3","randpedig_500_0.3","randpedig_1000_0.3","randpedig_2000_0.3","randpedig_5000_0.3"};
+
+	/** samplesizes is for the special situation where input structure
+	 * is just ordered structure with domainsize=samplesizes[]. Not
+	 * related to 'samplesize' in GradientGraph.learnParameters !
+	 */
+	int samplesizes[]={1000};
+	double missperc[]={0.0,0.01,0.05,0.1};
+	
+
+	/* 1st component of settings: index of input struc in strucs
+	 * 2nd component of settings: index of missingness in missperc
+	 */
+	int settings[][]={{0,2}};
+// 	int settings[][]={{0,0},{0,1},{0,2},{0,3},{1,0},{1,1},{1,2},{1,3},{2,0},{2,1},{2,2},{2,3},{3,0},{3,1},{3,2},{3,3},{4,0},{4,1},{4,2},{4,3}};
+
+	int repeat = 1;
+	for (int s=0;s<settings.length;s++){
+	  
+	    try{
+		System.out.println("settings " + s);
+
+		String struc = strucs[settings[s][0]];
+		int samplesize;
+		if (struc.equals(""))
+		    samplesize=samplesizes[settings[s][0]];
+		else 
+		    samplesize=0;
+	
+
+		String timestamp = mydateform.format(mycal.getTime());
+		String logfile = logstring +"_"+ timestamp + "_"+s+ ".arff";
+		System.out.println("Logfile: "+logfile);
+		BufferedWriter logwriter = FileIO.openOutputFile(logfile);
+		double av_numnodes = 0;
+		double min_numnodes = Double.MAX_VALUE;
+		double max_numnodes = 0;
+
+		double av_numedges = 0;
+		double min_numedges = Double.MAX_VALUE;
+		double max_numedges = 0;
+
+		double av_numindicators = 0;
+		double min_numindicators = Double.MAX_VALUE;
+		double max_numindicators = 0;
+
+		double av_timebuild = 0;
+		double min_timebuild = Double.MAX_VALUE;
+		double max_timebuild = 0;
+
+		double av_timelearn = 0;
+		double min_timelearn = Double.MAX_VALUE;
+		double max_timelearn = 0;
+
+		double av_bestlik = 0;
+		double min_bestlik = Double.MAX_VALUE;
+		double max_bestlik = 0;
+
+		double av_besttrueratio = 0;
+		double min_besttrueratio = Double.MAX_VALUE;
+		double max_besttrueratio = 0;
+
+		double av_dist = 0;
+		double min_dist = Double.MAX_VALUE;
+		double max_dist = 0;
+		
+		for (int r=0;r<repeat;r++){
+		    logwriter.write("% Model: "+ model + '\n');
+		    logwriter.write("% Input: "+ struc + '\n');
+		    logwriter.flush();
+
+		    if (!struc.equals(""))
+			loadRelStruc(thisprimula,struc);
+		    else 
+			loadRelStruc(thisprimula,samplesize);
+
+		    String rbngeninputfilestring = "/home/jaeger/B/Primula-Develop/New/Primula-beta/Examples/RBNinputs/"+model+"_gen.rbn";
+		    File rbngenfile = new File(rbngeninputfilestring);
+		    thisprimula.loadRBNFunction(rbngenfile);
+
+		    System.out.print("Generating data ...");
+		    Instantiation data = thissampler.sampleOneInstantiation(missperc[settings[s][1]]);
+		    System.out.println("done");
+// 		    System.out.println("DATA: ");
+// 		    System.out.println(data.printAsString(thisprimula.getRels(),""));
+		    
+// 		    data.delete(new Rel("source1",1));
+// 		    data.delete(new Rel("source2",1));
+// 		    data.delete(new Rel("source3",1));
+
+
+// 		    
+
+		    String blpdatfile = "/home/jaeger/balios/Data/"+struc+"_"+missperc[settings[s][1]]+"_"+timestamp;
+		    data.saveToBLPDatFile(blpdatfile,thisprimula.getRels().getSize());
+
+
+
+		    String rbnparaminputfilestring = "/home/jaeger/B/Primula-Develop/New/Primula-beta/Examples/RBNinputs/"+model+"_param.rbn";
+		    File rbnparamfile = new File(rbnparaminputfilestring);
+		    thisprimula.loadRBNFunction(rbnparamfile);
+
+		    RBN thisrbn = thisprimula.getRBN();
+		    if (thisrbn==null) System.out.println("thisrbn is null");
+		    RelStruc thisA = thisprimula.getRels();
+		    //	    System.out.println(data.printSummary());
+		    // 	    System.out.println(data.printAsString(thisA,""));
+		    long time;
+		    long newtime;
+		    double[][] allThetas;
+
+		    /* timers[0]: time for building gradient graph
+		     * timers[1]: time for learning
+		     */
+		    long[] timers = new long[2];
+		    int[] iterationcounters = new int[2];
+
+		    /***************************************
+		     * construct gradient graph
+		     ***************************************/
+		    time = System.currentTimeMillis();
+		    GradientGraph gg = new GradientGraph(thisrbn,thisA,data);
+		    //gg.showAllNodes(6,thisprimula.getRels());
+
+		    newtime = System.currentTimeMillis();
+		    timers[0]=newtime - time;
+
+
+		    String[] params = gg.parameters();
+		    for (int i=0;i<params.length;i++)
+			logwriter.write("@attribute " + params[i]+ " real" + '\n');
+		    logwriter.write("@attribute  small_lik[0] real" + '\n');
+		    logwriter.write("@attribute  small_lik[1] real" + '\n');
+		    logwriter.write("@attribute  distance  real" + '\n');
+		    logwriter.write("@attribute  lik_per_node real" + '\n');
+		    logwriter.write("@attribute  distance real" + '\n');
+		    logwriter.write("@attribute  samplesize real" + '\n');
+		    logwriter.write("@attribute  time_learning real" + '\n');
+		    
+
+		    logwriter.flush();
+
+
+		    time = System.currentTimeMillis();
+
+		    /***************************************
+		     * learn parameters
+		     ***************************************/
+		    allThetas = gg.learnParameters(trueparams,iterationcounters);
+		    newtime = System.currentTimeMillis();	    
+		    timers[1]=newtime - time;
+
+
+		    for (int i=0;i<allThetas.length;i++){
+			for (int j=0;j<allThetas[i].length-2;j++)
+			    logwriter.write(StringOps.doubleConverter(allThetas[i][j])+'\t');
+			logwriter.write(Double.toString(allThetas[i][allThetas[i].length-2])+'\t');
+			logwriter.write(StringOps.doubleConverter(allThetas[i][allThetas[i].length-1])+'\t');
+			logwriter.write('\n');
+	    
+		    }
+
+		    logwriter.flush();
+		    logwriter.write("% Num Nodes, Num Edges, Num Indicators, Time construction,Time learning,Iterations thetasearch,Iterations linesearch,likelihood best,likelihood true,best/true ratio,best/true distance"+ '\n');
+
+		    double bestlik=allThetas[allThetas.length-2][allThetas[0].length-2];
+		    double truelik=allThetas[allThetas.length-1][allThetas[0].length-2];
+		    double dist=allThetas[allThetas.length-2][allThetas[0].length-1];
+
+		    
+
+		    logwriter.write(Integer.toString(gg.numberOfNodes()) + ",");
+		    logwriter.write(Integer.toString(gg.numberOfEdges()) + ",");
+		    logwriter.write(Integer.toString(gg.numberOfIndicators()) + ",");
+		    logwriter.write(timers[0]+ ",");
+		    logwriter.write(timers[1]+ ",");
+		    logwriter.write(iterationcounters[0]+ ",");
+		    logwriter.write(iterationcounters[1]+ ",");
+		    logwriter.write(Double.toString(bestlik)+ ",");
+		    logwriter.write(Double.toString(truelik)+ ",");
+		    logwriter.write(Double.toString(bestlik/truelik)+ ",");
+		    logwriter.write(StringOps.doubleConverter(dist)+ '\n');
+
+		    av_numnodes = av_numnodes + gg.numberOfNodes();		    
+		    min_numnodes = Math.min(min_numnodes,gg.numberOfNodes());
+		    max_numnodes = Math.max(max_numnodes,gg.numberOfNodes());
+		    
+		    av_numedges = av_numedges + gg.numberOfEdges();		    
+		    min_numedges = Math.min(min_numedges,gg.numberOfEdges());
+		    max_numedges = Math.max(max_numedges,gg.numberOfEdges());
+
+		    av_numindicators = av_numindicators + gg.numberOfIndicators();		    
+		    min_numindicators = Math.min(min_numindicators,gg.numberOfIndicators());
+		    max_numindicators = Math.max(max_numindicators,gg.numberOfIndicators());
+
+	
+		    av_timebuild = av_timebuild+ timers[0];
+		    min_timebuild = Math.min(min_timebuild,timers[0]);
+		    max_timebuild = Math.max(max_timebuild,timers[0]);
+		    av_timelearn = av_timelearn + timers[1];
+		    min_timelearn = Math.min(min_timelearn,timers[1]);
+		    max_timelearn = Math.max(max_timelearn,timers[1]);
+		    av_bestlik = av_bestlik + bestlik;
+		    min_bestlik =  Math.min(min_bestlik,bestlik);
+		    max_bestlik = Math.max(max_bestlik,bestlik);
+		    av_besttrueratio = av_besttrueratio + bestlik/truelik;
+		    min_besttrueratio = Math.min(min_besttrueratio,bestlik/truelik);
+		    max_besttrueratio = Math.max(max_besttrueratio,bestlik/truelik);
+		    av_dist = av_dist + dist;
+		    min_dist =  Math.min(min_dist,dist);
+		    max_dist = Math.max(max_dist,dist);
+	
+
+		    logwriter.flush();
+		} /* for repeat ...*/
+		   
+		
+		logwriter.write("%%%%%%%%%%%  SUMMARY  %%%%%%%%%%%%%" + '\n');
+		logwriter.write("% av_numnodes,");
+		logwriter.write("min_numnodes,");
+		logwriter.write("max_numnodes,");
+		logwriter.write("av_numedges,");
+		logwriter.write("min_numedges,");
+		logwriter.write("max_numedges,");
+		logwriter.write("av_numindicators,");
+		logwriter.write("min_numindicators,");
+		logwriter.write("max_numindicators,");
+		logwriter.write("av_timebuild,");
+		logwriter.write("min_timebuild,");
+		logwriter.write("max_timebuild,");
+		logwriter.write("av_timelearn,");
+		logwriter.write("min_timelearn,");
+		logwriter.write("max_timelearn,");
+		logwriter.write("av_bestlik ,");
+		logwriter.write("min_bestlik,");
+		logwriter.write("max_bestlik,");
+		logwriter.write("av_besttrueratio,");
+		logwriter.write("min_besttrueratio,");
+		logwriter.write("max_besttrueratio,");
+		logwriter.write("av_dist,");
+		logwriter.write("min_dist,");
+		logwriter.write("max_dist," + '\n');
+
+		logwriter.write(StringOps.doubleConverter(av_numnodes/repeat) + ",");
+		logwriter.write(Double.toString(min_numnodes) + ",");
+		logwriter.write(Double.toString(max_numnodes) + ",");
+		logwriter.write(StringOps.doubleConverter(av_numedges/repeat) + ",");
+		logwriter.write(Double.toString(min_numedges) + ",");
+		logwriter.write(Double.toString(max_numedges) + ",");
+		logwriter.write(StringOps.doubleConverter(av_numindicators/repeat) + ",");
+		logwriter.write(Double.toString(min_numindicators) + ",");
+		logwriter.write(Double.toString(max_numindicators) + ",");		
+		logwriter.write(StringOps.doubleConverter(av_timebuild/repeat) + ",");
+		logwriter.write(Double.toString(min_timebuild) + ",");
+		logwriter.write(Double.toString(max_timebuild) + ",");
+		logwriter.write(StringOps.doubleConverter(av_timelearn/repeat) + ",");
+		logwriter.write(Double.toString(min_timelearn) + ",");
+		logwriter.write(Double.toString(max_timelearn) + ",");
+		logwriter.write(Double.toString(av_bestlik/repeat)  + ",");
+		logwriter.write(Double.toString(min_bestlik) + ",");
+		logwriter.write(Double.toString(max_bestlik) + ",");
+		logwriter.write(Double.toString(av_besttrueratio/repeat) + ",");
+		logwriter.write(Double.toString(min_besttrueratio) + ",");
+		logwriter.write(Double.toString(max_besttrueratio) + ",");
+		logwriter.write(StringOps.doubleConverter(av_dist/repeat) + ",");
+		logwriter.write(StringOps.doubleConverter(min_dist) + ",");
+		logwriter.write(StringOps.doubleConverter(max_dist)  + '\n');    
+
+		logwriter.close();
+	    }
+	    catch (RBNCompatibilityException e){System.out.println(e);}
+	    catch (IOException e){System.out.println(e);}
+	   
+	} /* for settings ...*/
+	
+
+
+	thisprimula.exitProgram();
+   
+	
+    }
+}

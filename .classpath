@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/home/jaeger/mysql-connector-java-5.0.4/mysql-connector-java-5.0.4-bin.jar"/>
+	<classpathentry kind="lib" path="/home/jaeger/B/Java/Packages/dom4j/dom4j-1.6.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JavaUtilities"/>
+	<classpathentry kind="output" path="Classes"/>
+</classpath>
