@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="and" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="or" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=16,g=120,b=16]"/>
+      <Rel name="input" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=0,g=10,b=210]"/>
+      <Rel name="wire" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="nand" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=255,g=145,b=0]"/>
+      <Rel name="nor" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="I1" coords="120,90"/>
+            <obj ind="1" name="I2" coords="180,90"/>
+            <obj ind="2" name="I3" coords="240,90"/>
+            <obj ind="3" name="OR" coords="150,150"/>
+            <obj ind="4" name="NA" coords="204,188"/>
+            <obj ind="5" name="I4" coords="311,94"/>
+            <obj ind="6" name="OUT" coords="252,251"/>
+            <obj ind="7" name="AND" coords="274,154"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="and" args="(AND)" val="true"/>
+            <d rel="or" args="(OR)" val="true"/>
+            <d rel="input" args="(I1)" val="true"/>
+            <d rel="input" args="(I2)" val="true"/>
+            <d rel="input" args="(I3)" val="true"/>
+            <d rel="input" args="(I4)" val="true"/>
+            <d rel="wire" args="(I1,OR)" val="true"/>
+            <d rel="wire" args="(I2,OR)" val="true"/>
+            <d rel="wire" args="(I3,NA)" val="true"/>
+            <d rel="wire" args="(I3,AND)" val="true"/>
+            <d rel="wire" args="(OR,NA)" val="true"/>
+            <d rel="wire" args="(NA,OUT)" val="true"/>
+            <d rel="wire" args="(I4,AND)" val="true"/>
+            <d rel="wire" args="(AND,OUT)" val="true"/>
+            <d rel="nand" args="(NA)" val="true"/>
+            <d rel="nor" args="(OUT)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

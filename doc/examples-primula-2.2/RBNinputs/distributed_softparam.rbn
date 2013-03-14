@@ -1,0 +1,91 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  A toy "agent-communication" model: the domain consists  %
+%  of a number of objects of type 'agent', a finite        %
+%  sequence of 'time' points. Agents are connected with a  %
+%  binary 'link' relation. The directionality of this      %
+%  relation plays no role, i.e. link(a1,a2) is equivalent  %
+%  to link(a2,a1), and is to be interpreted as 'there      %
+%  exists a communication channel between agents a1 and a2'%
+%  At each point in time, each agent  tosses a fair coin   %
+%  for each of its links to determine whether in this time %
+%  slot it wants to receive or send via this channel.      %
+%  This is represented by the probabilistic 'receivemode'  %
+%  relation.                                               %
+%  At time 'initial' a message is given to all 'source'    %
+%  agents. If at some time point agent a1 has the message, %
+%  is connected via a link to agent a2, a1 puts this link  %
+%  in send mode, and a2 in receive mode, then agent a2 will%
+%  receive the message at this time via this link with     %
+%  probability 0.7. Probabilties from several links are    %
+%  combined with noisy-or. The probabilistic               %
+%  relation 'hasmessage' represents which agents have the  %
+%  message at which points in time (once received, the     %
+%  message will never be lost by an agent).                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%  
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Now a macro that extracts from the directed 'link'      %
+%  relation an undirected @connected relatation            %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@connected([agent]a,[agent]aa)=
+		    sformula((link(a,aa)|link(aa,a)));
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The probabilistic setting of the receivemode for agents  %
+% v and w at time t:                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+receivemode([agent]v,[agent]w,[time]t)=
+		     (@connected(v,w):#five,0.001);
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A macro that evaluates to 1 if agent a had the message   %
+% at time t-1                                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@hasmessagetminus1([agent]a,[time]t) = n-or{hasmessage(a,tt)|tt: timeord(tt,t)};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A macro that specifies the propagation of the message    %
+% from a to v at time t (depending on whether a has the    %
+% message at time t-1, and the receivemodes of the         %
+% connection between v and a)                              %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@getfromneighbor([agent]v,[time]t,[agent]a) = (@hasmessagetminus1(a,t):
+			      (receivemode(v,a,t):
+			          (receivemode(a,v,t):0.001,0.999)
+			      ,
+			          0.001
+	                      )
+			  ,
+		              0.001  
+                          );
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A macro that specifies whether v receives the message    %
+% at time t (from any one of its neighbors)                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@receives([agent]v,[time]t) = n-or{ (@getfromneighbor(v,t,a):#seven,0.001) | 
+				a: (link(a,v)|link(v,a))};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Finally, the model for the relation of interest,         %
+% describing whether agent v has the message at time t     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+hasmessage([agent]v,[time]t)= 
+		     (sformula(initial(t)):
+		          (sformula(source(v)):0.999,0.001)
+		     ,
+		          (@hasmessagetminus1(v,t):
+		      	     0.999
+		          ,
+		             @receives(v,t) 
+		          )
+		     );

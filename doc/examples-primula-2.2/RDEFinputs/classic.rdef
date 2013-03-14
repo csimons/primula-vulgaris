@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations/>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="a" coords="133,41"/>
+         </Domain>
+         <PredefinedRels/>
+      </DataForInputDomain>
+   </Data>
+</root>

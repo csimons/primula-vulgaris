@@ -1,0 +1,3 @@
+
+
+r(v)= n-or{ esum{ (sformula(blue(u)):#param1,#param2)|u: edge(u,w) }   |w: edge(w,v) }; 

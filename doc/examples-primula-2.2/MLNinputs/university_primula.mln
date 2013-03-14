@@ -1,0 +1,76 @@
+// This is a modified version of univ.mln supplied with Alchemy.
+//
+// Modifications:
+// The basis for this model is the clausal version of univ.mln generated 
+// by Alchemy's CNF transformation, with weights learned by Alchemy.
+//
+// Phase constants Pre_Quals and Post_Quals, and position constants 
+// Faculty and Faculty_emeritus are encoded by modified hasPosition and
+// inPhase predicates
+//
+// Formulas involving function motherOf() have been removed
+//
+//predicate declarations
+hasPositionFaculty(person)
+hasPositionFacultyEmeritus(person)
+advisedBy(person,person)
+professor(person)
+publication(title,person)
+inPhasePre(person)
+inPhasePost(person)
+student(person)
+
+person = { Ada, Alan, Alex, Alice, Andy, Bart, Becca, Betty, Bill, Bob, Carl, Carol, Cathy, Charles, Claire }
+
+title = { Title1, Title2, Title3, Title4, Title5, Title6, Title7,Title8,Title9 }
+
+
+// group 2
+1.55628  professor(a1) v student(a1)
+5.60005  !professor(a1) v !student(a1)
+
+// group 3
+4.64621  student(a1) v !advisedBy(a1,a2)
+3.9145  professor(a1) v !advisedBy(a2,a1)
+
+// group 4
+10.0423  student(a1) v !inPhasePre(a1)
+11.3708  student(a1) v !inPhasePost(a1)
+
+// group 5
+5.87286  professor(a1) v !hasPositionFaculty(a1)
+5.85054  professor(a1) v !hasPositionFacultyEmeritus(a1)
+
+// group 6
+6.72199  !professor(a2) v !student(a1) v advisedBy(a1,a2) v !publication(a3,a1) v !publication(a3,a2) v a1 = a2
+
+// group 7
+-0.767495  !advisedBy(a1,a2) v inPhasePre(a1) v !hasPositionFaculty(a2)
+-1.42323  !advisedBy(a1,a2) v inPhasePost(a1) v !hasPositionFaculty(a2)
+0.218835  !advisedBy(a1,a2) v inPhasePre(a1) v !hasPositionFacultyEmeritus(a2)
+2.64837  !advisedBy(a1,a2) v inPhasePost(a1) v !hasPositionFacultyEmeritus(a2)
+
+// group 8
+2.92123  !inPhasePre(a1) v !inPhasePost(a1)
+-2.08168  inPhasePost(a1) v !inPhasePre(a1)
+-3.68719  inPhasePre(a1) v !inPhasePost(a1)
+2.84764  inPhasePre(a1) v inPhasePost(a1)
+
+// group 9
+-2.3834  professor(a1)
+
+// group 10
+-1.66037  student(a1)
+
+// group 11
+-3.02401  advisedBy(a1,a2)
+
+// group 12
+-0.631775  publication(a1,a2)
+
+// group 13
+-0.073587  (inPhasePre(a1) v inPhasePost(a1))
+
+// group 14
+-0.514359  (hasPositionFaculty(a1) v hasPositionFacultyEmeritus(a1))
+

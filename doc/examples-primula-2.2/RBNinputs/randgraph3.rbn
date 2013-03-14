@@ -1,0 +1,3 @@
+% Random (directed) graph with edge probability 1/#nodes
+
+edge(v,w)=mean{sformula(u=v)|u:u=u};

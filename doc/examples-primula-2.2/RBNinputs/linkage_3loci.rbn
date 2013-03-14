@@ -1,0 +1,58 @@
+
+% Code for a multipoint genetic linkage model based 
+% on the model described in 
+% M.Fishelson and D. Geiger: Exact genetic linkage computations
+% for general pedigrees. Bioinformatics 18, Suppl. 1, 2002
+
+% Model is for three loci with possible alleles a and A at each locus.
+% The population frequencies are .8,.6,.1 for allele A at locus 1,2 and
+% 3, respectively.
+% The recombination fraction between locus 1 and 2 is .1,
+% between 2 and 3 it is .3.
+
+%L1paternal(i) is true if the paternal haplotype of individual i
+%is the paternal haplotype of i's father
+L1paternal(i) = 0.5;
+L2paternal(i) = (L1paternal(i):.9,.1);
+L3paternal(i) = (L2paternal(i):.7,.3);
+
+%L1maternal(i) is true if the maternal haplotype of individual i
+%is the paternal haplotype of i's mother
+L1maternal(i) = 0.5;
+L2maternal(i) = (L1maternal(i):.9,.1);
+L3maternal(i) = (L2maternal(i):.7,.3);
+
+%Gtype1patA(i) is true if the paternal haplotype of i at locus 1 is an A
+
+@select1fromfather(i) = mean{(L1paternal(i):Gtype1patA(f),Gtype1matA(f)) |f: father(f,i)};
+@select2fromfather(i) = mean{(L2paternal(i):Gtype2patA(f),Gtype2matA(f)) |f: father(f,i)};
+@select3fromfather(i) = mean{(L3paternal(i):Gtype3patA(f),Gtype3matA(f)) |f: father(f,i)};
+
+
+Gtype1patA(i) = (sformula(founder(i)):.8,@select1fromfather(i));
+Gtype2patA(i) = (sformula(founder(i)):.6,@select2fromfather(i));
+Gtype3patA(i) = (sformula(founder(i)):.1,@select3fromfather(i));
+
+@select1frommother(i) = mean{(L1maternal(i):Gtype1patA(f),Gtype1matA(f)) |f: mother(f,i)};
+@select2frommother(i) = mean{(L2maternal(i):Gtype2patA(f),Gtype2matA(f)) |f: mother(f,i)};
+@select3frommother(i) = mean{(L3maternal(i):Gtype3patA(f),Gtype3matA(f)) |f: mother(f,i)};
+
+Gtype1matA(i) = (sformula(founder(i)):.8,@select1frommother(i));
+Gtype2matA(i) = (sformula(founder(i)):.6,@select2frommother(i));
+Gtype3matA(i) = (sformula(founder(i)):.1,@select3frommother(i));
+
+%Reducing the ordered Genotypes to unordered Genotypes: Gtype1AA(i) is true
+%if both paternal and maternal haplotypes are A, etc...
+
+Gtype1AA(v) = (Gtype1patA(v):(Gtype1matA(v):1,0),0);
+Gtype1Aa(v) = (Gtype1patA(v):(Gtype1matA(v):0,1),(Gtype1matA(v):1,0));
+Gtype1aa(v) = (Gtype1patA(v):0,(Gtype1matA(v):0,1));
+
+Gtype2AA(v) = (Gtype2patA(v):(Gtype2matA(v):1,0),0);
+Gtype2Aa(v) = (Gtype2patA(v):(Gtype2matA(v):0,1),(Gtype2matA(v):1,0));
+Gtype2aa(v) = (Gtype2patA(v):0,(Gtype2matA(v):0,1));
+
+Gtype3AA(v) = (Gtype3patA(v):(Gtype3matA(v):1,0),0);
+Gtype3Aa(v) = (Gtype3patA(v):(Gtype3matA(v):0,1),(Gtype3matA(v):1,0));
+Gtype3aa(v) = (Gtype3patA(v):0,(Gtype3matA(v):0,1));
+

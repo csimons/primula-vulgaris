@@ -1,0 +1,46 @@
+
+@type-b-l(u,v)=sformula((block(u) & location(v)));
+@type-l-l(u,v)=sformula((location(u) & location(v)));
+
+@predselected(a,b)=n-or{blocks(a,c)|c: (less(c,b) & location(c) )};
+
+@selprob(v)=mean{sformula(z=v)|z: ( (less(v,z)&location(z)) | v=z )};
+
+@selects(a,b)=(@predselected(a,b):
+		0,@selprob(b)
+	      ); 
+
+blocks([Block]b,[Location]l)= @selects(b,l);
+
+connectionblocked([Location]l1,[Location]l2)=
+	(sformula( ((leftof(l1,l2)|leftof(l2,l1))
+		  |(belowof(l1,l2)|belowof(l2,l1))
+		 )):
+	n-or{blocks(u,l1),blocks(u,l2)|u:block(u)},
+	0
+	);
+
+
+@connectoneighbor(l1,l2,ln,u)=(pathoflength(l1,ln,u):(connectionblocked(ln,l2):0,1),0);
+
+pathoflength(l1,l2,v)=(
+			@type-l-l(l1,l2):
+				(sformula(zero(v)):
+					sformula(l1=l2),
+					(n-or{pathoflength(l1,l2,u)|u:pred(u,v)}:
+			 			1,
+			 			n-or{@connectoneighbor(l1,l2,w,u)|u,w: (pred(u,v)&((leftof(w,l2)|leftof(l2,w))
+		                                             |(belowof(w,l2)|belowof(l2,w))))
+			                            }
+			                 )
+			        ),
+			0
+		      );
+
+connected(l1,l2)=(@type-l-l(l1,l2):
+			n-or{pathoflength(l1,l2,u)|u: last(u)},
+			0
+		 );
+
+
+

@@ -1,0 +1,23 @@
+
+
+lives_in([person]v,[city]w)=(sformula(LA(w)):.05,.001);
+
+burglary([person]v)=0.001;
+
+earthquake([LA]w)= 0.01;
+
+@earthquake_in_la()=n-or{earthquake(v)|v:LA(v)};
+
+alarm([person]v)=( n-or{lives_in(v,la)|la : LA(la)}:
+		  n-or{(.9:burglary(v),0),(0.2:@earthquake_in_la(),0)| : v=v},
+		  (.9:burglary(v),0)
+		 );
+
+calls([person]v,[person]w) = (sformula(neighbor(v,w)):
+			   (sformula(prankster(v)):
+				(alarm(w):0.9,0.05),
+				(alarm(w):0.9,0)
+			   )
+			   ,0
+	     );
+alarmed([person]v) = n-or{calls(w,v)|w:neighbor(w,v)};

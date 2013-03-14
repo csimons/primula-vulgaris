@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations/>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="0" coords="74,129"/>
+            <obj ind="1" name="1" coords="148,132"/>
+            <obj ind="2" name="2" coords="195,130"/>
+            <obj ind="3" name="3" coords="252,129"/>
+            <obj ind="4" name="4" coords="301,128"/>
+            <obj ind="5" name="5" coords="359,133"/>
+            <obj ind="6" name="6" coords="94,204"/>
+            <obj ind="7" name="7" coords="169,200"/>
+            <obj ind="8" name="8" coords="207,204"/>
+            <obj ind="9" name="9" coords="255,204"/>
+         </Domain>
+         <PredefinedRels/>
+      </DataForInputDomain>
+   </Data>
+</root>

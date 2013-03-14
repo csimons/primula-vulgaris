@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="father" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="mother" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="0" coords="1320,1380"/>
+            <obj ind="1" name="1" coords="1410,1380"/>
+            <obj ind="2" name="2" coords="1410,1470"/>
+            <obj ind="3" name="3" coords="1530,1470"/>
+            <obj ind="4" name="4" coords="1320,1470"/>
+            <obj ind="5" name="5" coords="1470,1530"/>
+            <obj ind="6" name="6" coords="1620,1410"/>
+            <obj ind="7" name="7" coords="1680,1410"/>
+            <obj ind="8" name="8" coords="1650,1470"/>
+            <obj ind="9" name="9" coords="1680,1560"/>
+            <obj ind="10" name="10" coords="1620,1560"/>
+            <obj ind="11" name="11" coords="1590,1470"/>
+            <obj ind="12" name="12" coords="1560,1620"/>
+            <obj ind="13" name="13" coords="1200,1470"/>
+            <obj ind="14" name="14" coords="1260,1530"/>
+            <obj ind="15" name="15" coords="1320,1620"/>
+            <obj ind="16" name="16" coords="1440,1620"/>
+            <obj ind="17" name="17" coords="1380,1680"/>
+            <obj ind="18" name="18" coords="1500,1740"/>
+            <obj ind="19" name="19" coords="1740,1560"/>
+            <obj ind="20" name="20" coords="1650,1620"/>
+            <obj ind="21" name="21" coords="1710,1620"/>
+            <obj ind="22" name="22" coords="1770,1620"/>
+            <obj ind="23" name="23" coords="1374,1742"/>
+            <obj ind="24" name="24" coords="1652,1742"/>
+            <obj ind="25" name="26" coords="1290,1678"/>
+            <obj ind="26" name="25" coords="1461,1828"/>
+            <obj ind="27" name="27" coords="1449,1903"/>
+            <obj ind="28" name="28" coords="1379,1835"/>
+            <obj ind="29" name="29" coords="1744,1731"/>
+            <obj ind="30" name="30" coords="1708,1805"/>
+            <obj ind="31" name="31" coords="1622,1945"/>
+            <obj ind="32" name="32" coords="1530,1791"/>
+            <obj ind="33" name="33" coords="1354,1529"/>
+            <obj ind="34" name="34" coords="1718,1469"/>
+            <obj ind="35" name="35" coords="1451,1298"/>
+            <obj ind="36" name="36" coords="1164,1372"/>
+            <obj ind="37" name="37" coords="1780,1482"/>
+            <obj ind="38" name="38" coords="1803,1354"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="father" args="(0,2)" val="true"/>
+            <d rel="father" args="(0,4)" val="true"/>
+            <d rel="father" args="(2,5)" val="true"/>
+            <d rel="father" args="(4,14)" val="true"/>
+            <d rel="father" args="(5,12)" val="true"/>
+            <d rel="father" args="(6,8)" val="true"/>
+            <d rel="father" args="(9,20)" val="true"/>
+            <d rel="father" args="(9,21)" val="true"/>
+            <d rel="father" args="(9,22)" val="true"/>
+            <d rel="father" args="(11,10)" val="true"/>
+            <d rel="father" args="(15,17)" val="true"/>
+            <d rel="father" args="(17,18)" val="true"/>
+            <d rel="father" args="(17,23)" val="true"/>
+            <d rel="father" args="(20,24)" val="true"/>
+            <d rel="father" args="(23,25)" val="true"/>
+            <d rel="father" args="(24,30)" val="true"/>
+            <d rel="father" args="(25,27)" val="true"/>
+            <d rel="father" args="(30,31)" val="true"/>
+            <d rel="father" args="(33,15)" val="true"/>
+            <d rel="father" args="(34,9)" val="true"/>
+            <d rel="father" args="(36,13)" val="true"/>
+            <d rel="father" args="(38,37)" val="true"/>
+            <d rel="mother" args="(1,2)" val="true"/>
+            <d rel="mother" args="(1,4)" val="true"/>
+            <d rel="mother" args="(3,5)" val="true"/>
+            <d rel="mother" args="(7,8)" val="true"/>
+            <d rel="mother" args="(8,9)" val="true"/>
+            <d rel="mother" args="(8,10)" val="true"/>
+            <d rel="mother" args="(10,12)" val="true"/>
+            <d rel="mother" args="(12,18)" val="true"/>
+            <d rel="mother" args="(13,14)" val="true"/>
+            <d rel="mother" args="(14,15)" val="true"/>
+            <d rel="mother" args="(16,17)" val="true"/>
+            <d rel="mother" args="(16,24)" val="true"/>
+            <d rel="mother" args="(19,20)" val="true"/>
+            <d rel="mother" args="(19,21)" val="true"/>
+            <d rel="mother" args="(19,22)" val="true"/>
+            <d rel="mother" args="(26,23)" val="true"/>
+            <d rel="mother" args="(27,31)" val="true"/>
+            <d rel="mother" args="(28,27)" val="true"/>
+            <d rel="mother" args="(29,30)" val="true"/>
+            <d rel="mother" args="(32,25)" val="true"/>
+            <d rel="mother" args="(35,1)" val="true"/>
+            <d rel="mother" args="(37,19)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

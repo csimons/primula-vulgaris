@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="Movie" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="Theater" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=16,g=120,b=16]"/>
+      <Rel name="genre_thriller" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=0,g=10,b=210]"/>
+      <Rel name="genre_foreign" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=255,g=145,b=0]"/>
+      <Rel name="budget_low" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+      <Rel name="budget_high" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=100,g=55,b=0]"/>
+      <Rel name="type_mega" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=130,g=0,b=0]"/>
+      <Rel name="type_art" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=25,g=25,b=25]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="Terminator" coords="60,1320"/>
+            <obj ind="1" name="DieHard" coords="60,1380"/>
+            <obj ind="2" name="Amelie" coords="60,1440"/>
+            <obj ind="3" name="Chocolat" coords="60,1500"/>
+            <obj ind="4" name="Cinemaxx" coords="180,1320"/>
+            <obj ind="5" name="MovieStar" coords="180,1380"/>
+            <obj ind="6" name="CineArt" coords="180,1440"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="Movie" args="(Terminator)" val="true"/>
+            <d rel="Movie" args="(DieHard)" val="true"/>
+            <d rel="Movie" args="(Amelie)" val="true"/>
+            <d rel="Movie" args="(Chocolat)" val="true"/>
+            <d rel="Theater" args="(Cinemaxx)" val="true"/>
+            <d rel="Theater" args="(MovieStar)" val="true"/>
+            <d rel="Theater" args="(CineArt)" val="true"/>
+            <d rel="genre_thriller" args="(Terminator)" val="true"/>
+            <d rel="genre_thriller" args="(DieHard)" val="true"/>
+            <d rel="genre_foreign" args="(Amelie)" val="true"/>
+            <d rel="genre_foreign" args="(Chocolat)" val="true"/>
+            <d rel="budget_low" args="(Amelie)" val="true"/>
+            <d rel="budget_high" args="(Terminator)" val="true"/>
+            <d rel="budget_high" args="(DieHard)" val="true"/>
+            <d rel="type_mega" args="(Cinemaxx)" val="true"/>
+            <d rel="type_mega" args="(MovieStar)" val="true"/>
+            <d rel="type_art" args="(CineArt)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

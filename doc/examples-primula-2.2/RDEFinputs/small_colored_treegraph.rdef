@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="blue" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=0,g=51,b=255]"/>
+      <Rel name="edge" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="0" coords="300,570"/>
+            <obj ind="1" name="1" coords="120,420"/>
+            <obj ind="2" name="2" coords="180,420"/>
+            <obj ind="3" name="3" coords="240,420"/>
+            <obj ind="4" name="4" coords="300,420"/>
+            <obj ind="5" name="5" coords="360,420"/>
+            <obj ind="6" name="6" coords="420,420"/>
+            <obj ind="7" name="7" coords="480,420"/>
+            <obj ind="8" name="8" coords="180,510"/>
+            <obj ind="9" name="9" coords="300,510"/>
+            <obj ind="10" name="10" coords="390,510"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="blue" args="(1)" val="true"/>
+            <d rel="blue" args="(2)" val="true"/>
+            <d rel="blue" args="(4)" val="true"/>
+            <d rel="blue" args="(6)" val="true"/>
+            <d rel="edge" args="(1,8)" val="true"/>
+            <d rel="edge" args="(2,8)" val="true"/>
+            <d rel="edge" args="(3,9)" val="true"/>
+            <d rel="edge" args="(4,9)" val="true"/>
+            <d rel="edge" args="(5,9)" val="true"/>
+            <d rel="edge" args="(6,10)" val="true"/>
+            <d rel="edge" args="(7,10)" val="true"/>
+            <d rel="edge" args="(8,0)" val="true"/>
+            <d rel="edge" args="(9,0)" val="true"/>
+            <d rel="edge" args="(10,0)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

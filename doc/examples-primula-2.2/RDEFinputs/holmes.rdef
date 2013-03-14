@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="city" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="person" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=16,g=120,b=16]"/>
+      <Rel name="LA" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=0,g=10,b=210]"/>
+      <Rel name="neighbor" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="prankster" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=255,g=145,b=0]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="Holmes" coords="120,120"/>
+            <obj ind="1" name="Los_Angeles" coords="330,90"/>
+            <obj ind="2" name="Watson" coords="210,120"/>
+            <obj ind="3" name="Seattle" coords="330,150"/>
+            <obj ind="4" name="Miami" coords="330,210"/>
+            <obj ind="5" name="Gibbon" coords="30,120"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="city" args="(Los_Angeles)" val="true"/>
+            <d rel="city" args="(Seattle)" val="true"/>
+            <d rel="city" args="(Miami)" val="true"/>
+            <d rel="person" args="(Holmes)" val="true"/>
+            <d rel="person" args="(Watson)" val="true"/>
+            <d rel="person" args="(Gibbon)" val="true"/>
+            <d rel="LA" args="(Los_Angeles)" val="true"/>
+            <d rel="neighbor" args="(Holmes,Watson)" val="true"/>
+            <d rel="neighbor" args="(Holmes,Gibbon)" val="true"/>
+            <d rel="neighbor" args="(Watson,Holmes)" val="true"/>
+            <d rel="neighbor" args="(Gibbon,Holmes)" val="true"/>
+            <d rel="prankster" args="(Gibbon)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

@@ -1,0 +1,46 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% A model creating a random colored graph over the elements of the
+% input domain.
+% 
+% The global property threecoloring() defined at the end indicates 
+% whether the random coloring is a 3-coloring, i.e. no two adjacent
+% nodes have the same color
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% First define a symmetric, irreflexive edge relation with
+% a uniform distribution, i.e. a uniform distribution over 
+% all undirected graphs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+edge(v,w) = (sformula(v=w): 0
+	                  ,
+			    (sformula(less(v,w)): 0.5,edge(w,v))
+	    );
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Now a random coloring of the nodes with yellow, blue, red:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+yellow(v)=0.3333333;
+
+blue(v) = (yellow(v):0,0.5);
+
+red(v) = (yellow(v):0
+	           ,
+	            (blue(v):0,1)
+         );
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Now a macro saying that no two adjacent nodes have the same color
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@samecolor(v,w) = (blue(v):blue(w)
+                          ,
+                           (red(v):red(w)
+                                  ,
+	                          yellow(w) 
+                           )
+                  );
+
+threecoloring() = (n-or{(edge(v,w):@samecolor(v,w),0)|v,w:~v=w}:0,1);

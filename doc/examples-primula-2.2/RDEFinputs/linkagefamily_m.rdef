@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="founder" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="father" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="mother" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="2" coords="1431,1462"/>
+            <obj ind="1" name="3" coords="1507,1462"/>
+            <obj ind="2" name="5" coords="1470,1530"/>
+            <obj ind="3" name="6" coords="1620,1410"/>
+            <obj ind="4" name="7" coords="1680,1410"/>
+            <obj ind="5" name="8" coords="1650,1470"/>
+            <obj ind="6" name="9" coords="1680,1560"/>
+            <obj ind="7" name="10" coords="1595,1560"/>
+            <obj ind="8" name="11" coords="1590,1470"/>
+            <obj ind="9" name="12" coords="1560,1620"/>
+            <obj ind="10" name="18" coords="1500,1740"/>
+            <obj ind="11" name="13" coords="1437,1618"/>
+            <obj ind="12" name="14" coords="1715,1470"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="founder" args="(2)" val="true"/>
+            <d rel="founder" args="(3)" val="true"/>
+            <d rel="founder" args="(6)" val="true"/>
+            <d rel="founder" args="(7)" val="true"/>
+            <d rel="founder" args="(11)" val="true"/>
+            <d rel="founder" args="(13)" val="true"/>
+            <d rel="founder" args="(14)" val="true"/>
+            <d rel="father" args="(2,5)" val="true"/>
+            <d rel="father" args="(5,12)" val="true"/>
+            <d rel="father" args="(6,8)" val="true"/>
+            <d rel="father" args="(11,10)" val="true"/>
+            <d rel="father" args="(13,18)" val="true"/>
+            <d rel="father" args="(14,9)" val="true"/>
+            <d rel="mother" args="(3,5)" val="true"/>
+            <d rel="mother" args="(7,8)" val="true"/>
+            <d rel="mother" args="(8,9)" val="true"/>
+            <d rel="mother" args="(8,10)" val="true"/>
+            <d rel="mother" args="(10,12)" val="true"/>
+            <d rel="mother" args="(12,18)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

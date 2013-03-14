@@ -1,0 +1,67 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Model representing the selection of films by movie theaters.                  %
+%                                                                                %
+%  Theaters of type 'megaplex' will  show a foreign film with probability 0.1    %
+%  Other theaters will show a foreign film with probability 0.7                  %
+%  Theaters that do not show a foreign film will show a movie of type 'thriller' %
+%                                                                                %
+%  Given the type of movie a theater shows, the selection of the actual movie    %
+%  is by random, uniform selection from among all movies of that type            %
+%                                                                                %
+%  The model illustrates how such a uniform random selection can be modeled      %
+%  using the predefined ordering relation 'less' on the domain                   %
+%                                                                                %
+%                                                                                %
+%                                                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Returns 1 if shows(t,u) is true for some movie u preceding m in the ordering   %
+%                                                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@predselected(t,m) = n-or{shows(t,u)|u: (Movie(u)&less(u,m))};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Computes the selection probability for foreign movie m given that no movie    %
+%  preceding m in the ordering has already been selected. This is just           %
+%  1/(#movies not preceding m), which is computed by the mean{...} sub-formula   %
+%                                                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@selectprobforeign(m) = (sformula(genre_foreign(m)):
+				mean{sformula(m=u)|u: ((less(m,u)|u=m)& genre_foreign(u))},
+				0
+			);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The conditional probability that theater t selects movie m, given that         %
+% t shows a foreign movie                                                        %
+%                                                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@foreignselection(t,m) = (@predselected(t,m):0,@selectprobforeign(m));
+
+@selectprobthriller(m) = (sformula(genre_thriller(m)):
+				mean{sformula(m=u)|u: ((less(m,u)|u=m)& genre_thriller(u))},
+				0
+			 );
+
+ 
+@thrillerselection(t,m) = (@predselected(t,m):0,@selectprobthriller(m));
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Probabilistic relation representing the choice of movie type by a theater      %
+%                                                                                %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+shows_foreign([Theater]t) = (sformula(type_mega(t)):.1,.7);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% The main probabilistic relation representing which movies are shown by which   %
+% theaters                                                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+shows([Theater]t,[Movie]m) = 
+			 (shows_foreign(t):@foreignselection(t,m),@thrillerselection(t,m));

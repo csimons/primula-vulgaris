@@ -1,0 +1,65 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% A small Mendelian inheritance model for a gene with two alleles: A and a.   %
+% The random variable AFather(v) is true if individual v has inherited        %
+% allele A from his/her father. If v has inherited allele a from his/her      %
+% father, AFather(v) is false. Similarly, AMother(v) represents the allele    %
+% inherited from the mother.                                                  %
+%                                                                             %
+% According to the model, allele A has a population frequency of 0.3, i.e.    %
+% when a parent is not given in the pedigree, then the probability that       %
+% v has inherited allele A from that parent is set to 0.3.                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% Start by defining two macros: @fatherInTree(w) evaluates to 1 if w's        %
+% father is in the pedigree; else it evaluates to 0                           %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+@fatherInTree(w) = n-or{sformula(father(u,w))|u:};
+@motherInTree(w) = n-or{sformula(mother(u,w))|u:};
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% Now define the model for the two key relations AFather and AMother          %
+%                                                                             %
+% The subformula                                                              %
+%               mean{AFather(u),AMother(u)|u: father(u,v)}                    %
+% evaluates to 1 if AFather(u) and AMother(u) are both true, to 1/2 if        %
+% exactly one of the two is true, and to 0 if neither is true.                %
+%                                                                             %
+% With a probability of 0.01, the paternal (maternal) allele of offspring v   %
+% is not determined by a random selection from the alleles of v's father      %
+% (mother), but by a random mutation which results in an A with probability   %
+% 0.6 (and a with probability 0.4).                                           %
+%                                                                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+AFather(v) =  
+      (@fatherInTree(v):
+           (#mutationprob: 
+                 #AIfMutation,             
+		 mean{AFather(u),AMother(u)|u: father(u,v)}   
+	   ),
+  	   #APopulationFreq                                                
+      );
+
+AMother(v) =   
+      (@motherInTree(v):
+           (#mutationprob: 
+                 #AIfMutation,                                         
+		 mean{AFather(u),AMother(u)|u: mother(u,v)}   
+	   ),
+  	   #APopulationFreq                                                 
+      );
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% Finally, the two random variables defining the ordered genotype of v        %
+% determine the unordered genotype: AA(v) is true if v has two A alleles,     %
+% Aa(v) is true if v has one A and one a, aa(v) is true if v has two a alleles%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+AA(v) = (AFather(v):AMother(v),0);
+Aa(v) = (AFather(v):(AMother(v):0,1),AMother(v));
+aa(v) = (AFather(v):0,(AMother(v):0,1));
+	

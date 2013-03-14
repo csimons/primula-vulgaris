@@ -1,0 +1,30 @@
+% Encodes dynamic Bayesian network with CPTs:
+%
+% Initial time slice       Successor time slice
+%
+%       a(0)                                a(i)
+%  | true false            a(i-1) b(i-1)| true false
+% -------------            -------------------------
+%  |  .5   .5              true   true  |  .3   .7 
+%                          true   false |  .8   .2
+%                          false  true  |  .55  .45
+%                          false  false |  .2   .8
+%
+%          b(0)                     b(i)
+% a(0) | true false         a(i) | true false  
+% -----------------         ----------------- 
+% true |  .8   .2           true |  .8   .2
+% false|  .3   .7           false|  .3   .7 
+%
+% To instantiate the model, use 'Create OrderedStruc' from Primula Domain
+% Menu (size=number of time slices)!
+
+a(v) = (sformula(zero(v)):
+		0.5,
+		(n-or{a(u)|u: pred(u,v)}:
+			(n-or{b(u)|u: pred(u,v)}:0.3,0.8),
+			(n-or{b(u)|u: pred(u,v)}:0.55,0.2)
+		)
+	);
+
+b(v) = (a(v):0.8,0.3); 

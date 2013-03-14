@@ -1,0 +1,35 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Model for computation in logical circuits with or, and, nand and        %
+%  nor gates.                                                              %
+%  Probabilistic relation is out/1, representing the output of any         %
+%  gate.                                                                   %
+%                                                                          %
+%  Input domains represent circuits with gates of different types and      %
+%  a binary wire/2 relation representing connections. Gates may have any   %
+%  number of inputs (incoming wires)                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+@outputforinputgates(v) = 0.5;
+
+
+@outputfororgates(v) = n-or{out(w)|w: wire(w,v)};
+@outputforandgates(v) = (n-or{(out(w):0,1)|w: wire(w,v)}:0,1);
+@outputfornandgates(v) = n-or{(out(w):0,1)|w: wire(w,v)};
+@outputfornorgates(v) = (n-or{out(w)|w: wire(w,v)}:0,1);
+
+
+
+
+
+
+
+out(v) = (sformula(or(v)):
+			@outputfororgates(v),
+			(sformula(and(v)): 
+				@outputforandgates(v),
+				(sformula(nand(v)):
+					@outputfornandgates(v),
+						(sformula(nor(v)):
+							@outputfornorgates(v),
+							@outputforinputgates(v)))));
+

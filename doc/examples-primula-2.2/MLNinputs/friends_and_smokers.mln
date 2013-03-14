@@ -1,0 +1,13 @@
+//predicate declarations
+friends(person,person)
+smokes(person)
+cancer(person)
+
+//type declarations
+person={Anna,Bob,Paul}
+
+
+
+//weighted formulas
+1.5 smokes(x) => cancer(x)
+0.8 friends(x,y) ^ smokes(x) => smokes(y)

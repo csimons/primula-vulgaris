@@ -1,0 +1,11 @@
+% A representation of a standard Bayesian network with three nodes
+% Random variables are represented by probabilistic relations of arity 0
+% Independent of the domain, just one copy of the Bayesian network
+% will be generated.
+
+a()=0.5;
+b()=(a():0.4,0.9);
+c()=(a():
+	(b():0.2,0.4),
+	(b():0.1,0.3)
+     );

@@ -1,0 +1,13 @@
+//predicate declarations
+smokes(person)
+cancer(person)
+
+//type declarations
+person={Anna}
+
+
+
+//weighted formulas
+1 !smokes(x) v cancer(x)
+1 smokes(x) v !cancer(x)
+

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="block" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="location" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=16,g=120,b=16]"/>
+      <Rel name="leftof" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="belowof" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="0" coords="120,120"/>
+            <obj ind="1" name="1" coords="120,180"/>
+            <obj ind="2" name="2" coords="300,120"/>
+            <obj ind="3" name="3" coords="360,120"/>
+            <obj ind="4" name="4" coords="360,60"/>
+            <obj ind="5" name="5" coords="420,60"/>
+            <obj ind="6" name="6" coords="420,120"/>
+            <obj ind="7" name="7" coords="360,180"/>
+            <obj ind="8" name="8" coords="420,180"/>
+            <obj ind="9" name="9" coords="480,120"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="block" args="(0)" val="true"/>
+            <d rel="block" args="(1)" val="true"/>
+            <d rel="location" args="(2)" val="true"/>
+            <d rel="location" args="(3)" val="true"/>
+            <d rel="location" args="(4)" val="true"/>
+            <d rel="location" args="(5)" val="true"/>
+            <d rel="location" args="(6)" val="true"/>
+            <d rel="location" args="(7)" val="true"/>
+            <d rel="location" args="(8)" val="true"/>
+            <d rel="location" args="(9)" val="true"/>
+            <d rel="leftof" args="(2,3)" val="true"/>
+            <d rel="leftof" args="(3,6)" val="true"/>
+            <d rel="leftof" args="(4,5)" val="true"/>
+            <d rel="leftof" args="(6,9)" val="true"/>
+            <d rel="leftof" args="(7,8)" val="true"/>
+            <d rel="belowof" args="(3,7)" val="true"/>
+            <d rel="belowof" args="(4,3)" val="true"/>
+            <d rel="belowof" args="(5,6)" val="true"/>
+            <d rel="belowof" args="(6,8)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

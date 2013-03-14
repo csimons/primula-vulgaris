@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="source" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="link" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="time" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=102,g=102,b=0]"/>
+      <Rel name="timeord" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+      <Rel name="agent" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=0,g=10,b=210]"/>
+      <Rel name="initial" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=255,g=145,b=0]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="a0" coords="1470,1590"/>
+            <obj ind="1" name="a1" coords="1530,1530"/>
+            <obj ind="2" name="a2" coords="1590,1590"/>
+            <obj ind="3" name="a3" coords="1620,1530"/>
+            <obj ind="4" name="a4" coords="1710,1590"/>
+            <obj ind="5" name="a5" coords="1710,1500"/>
+            <obj ind="6" name="t0" coords="1350,1650"/>
+            <obj ind="7" name="t1" coords="1410,1650"/>
+            <obj ind="8" name="t2" coords="1470,1650"/>
+            <obj ind="9" name="t3" coords="1530,1650"/>
+            <obj ind="10" name="a7" coords="1590,1500"/>
+            <obj ind="11" name="a6" coords="1470,1500"/>
+            <obj ind="12" name="t4" coords="1590,1650"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="source" args="(a0)" val="true"/>
+            <d rel="link" args="(a0,a1)" val="true"/>
+            <d rel="link" args="(a0,a2)" val="true"/>
+            <d rel="link" args="(a1,a2)" val="true"/>
+            <d rel="link" args="(a1,a6)" val="true"/>
+            <d rel="link" args="(a2,a3)" val="true"/>
+            <d rel="link" args="(a3,a4)" val="true"/>
+            <d rel="link" args="(a4,a2)" val="true"/>
+            <d rel="link" args="(a5,a3)" val="true"/>
+            <d rel="link" args="(a7,a1)" val="true"/>
+            <d rel="time" args="(t0)" val="true"/>
+            <d rel="time" args="(t1)" val="true"/>
+            <d rel="time" args="(t2)" val="true"/>
+            <d rel="time" args="(t3)" val="true"/>
+            <d rel="time" args="(t4)" val="true"/>
+            <d rel="timeord" args="(t0,t1)" val="true"/>
+            <d rel="timeord" args="(t1,t2)" val="true"/>
+            <d rel="timeord" args="(t2,t3)" val="true"/>
+            <d rel="timeord" args="(t3,t4)" val="true"/>
+            <d rel="agent" args="(a0)" val="true"/>
+            <d rel="agent" args="(a1)" val="true"/>
+            <d rel="agent" args="(a2)" val="true"/>
+            <d rel="agent" args="(a3)" val="true"/>
+            <d rel="agent" args="(a4)" val="true"/>
+            <d rel="agent" args="(a5)" val="true"/>
+            <d rel="agent" args="(a7)" val="true"/>
+            <d rel="agent" args="(a6)" val="true"/>
+            <d rel="initial" args="(t0)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

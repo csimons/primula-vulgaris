@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="founder" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="father" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="mother" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="5" coords="1470,1530"/>
+            <obj ind="1" name="6" coords="1620,1410"/>
+            <obj ind="2" name="7" coords="1680,1410"/>
+            <obj ind="3" name="8" coords="1650,1470"/>
+            <obj ind="4" name="10" coords="1620,1560"/>
+            <obj ind="5" name="11" coords="1590,1470"/>
+            <obj ind="6" name="12" coords="1560,1620"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="founder" args="(5)" val="true"/>
+            <d rel="founder" args="(6)" val="true"/>
+            <d rel="founder" args="(7)" val="true"/>
+            <d rel="founder" args="(11)" val="true"/>
+            <d rel="father" args="(5,12)" val="true"/>
+            <d rel="father" args="(6,8)" val="true"/>
+            <d rel="father" args="(11,10)" val="true"/>
+            <d rel="mother" args="(7,8)" val="true"/>
+            <d rel="mother" args="(8,10)" val="true"/>
+            <d rel="mother" args="(10,12)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>

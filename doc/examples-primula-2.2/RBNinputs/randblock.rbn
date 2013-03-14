@@ -1,0 +1,33 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Main probabilistic relation is blocks(b,l), which represents       %
+%  the random placement of block b on a location l.                   %
+%                                                                     %
+%  The modeling of this relation uses the same techniques as the      %
+%  shows relation in movies.rbn                                       %
+%                                                                     %
+%                                                                     %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+@predselected(a,b)=n-or{blocks(a,c)|c: (less(c,b)&location(c))};
+
+@selprob(v)=mean{sformula(z=v)|z: (less(v,z)|v=z)};
+
+@selects(a,b)=(@predselected(a,b):
+		0,@selprob(b)
+	      ); 
+
+blocks([Block]b,[Location]l)= @selects(b,l);
+
+connectionblocked([Location]l1,[Location]l2)=
+	(sformula( ((leftof(l1,l2)|leftof(l2,l1))
+		  |(belowof(l1,l2)|belowof(l2,l1))
+		 )):
+	n-or{blocks(u,l1),blocks(u,l2)|u:block(u)},
+	0
+	);
+
+
+
+
+

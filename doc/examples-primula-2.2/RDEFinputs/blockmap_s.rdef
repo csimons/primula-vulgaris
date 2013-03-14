@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<root>
+   <Relations>
+      <Rel name="block" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=198,g=17,b=16]"/>
+      <Rel name="location" arity="1" argtypes="Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=16,g=120,b=16]"/>
+      <Rel name="leftof" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=185,g=155,b=60]"/>
+      <Rel name="belowof" arity="2" argtypes="Domain,Domain" valtype="boolean" default="false" type="predefined" color="java.awt.Color[r=50,g=195,b=66]"/>
+   </Relations>
+   <Data>
+      <DataForInputDomain>
+         <Domain>
+            <obj ind="0" name="Block_1" coords="120,120"/>
+            <obj ind="1" name="B1" coords="300,120"/>
+            <obj ind="2" name="B2" coords="360,120"/>
+            <obj ind="3" name="A2" coords="360,60"/>
+            <obj ind="4" name="A3" coords="420,60"/>
+            <obj ind="5" name="B3" coords="420,120"/>
+         </Domain>
+         <PredefinedRels>
+            <d rel="block" args="(Block_1)" val="true"/>
+            <d rel="location" args="(B1)" val="true"/>
+            <d rel="location" args="(B2)" val="true"/>
+            <d rel="location" args="(A2)" val="true"/>
+            <d rel="location" args="(A3)" val="true"/>
+            <d rel="location" args="(B3)" val="true"/>
+            <d rel="leftof" args="(B1,B2)" val="true"/>
+            <d rel="leftof" args="(B2,B3)" val="true"/>
+            <d rel="leftof" args="(A2,A3)" val="true"/>
+            <d rel="belowof" args="(A2,B2)" val="true"/>
+            <d rel="belowof" args="(A3,B3)" val="true"/>
+         </PredefinedRels>
+      </DataForInputDomain>
+   </Data>
+</root>
