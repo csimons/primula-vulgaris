@@ -156,7 +156,7 @@ public class RBNCreator {
     	formargs[0]=formula;
         return new ProbFormCombFunc(new CombFuncNOr(), 
         		formargs, 
-        		ArrayUtilities.vecToArr(quantargs) , 
+        		ArrayUtilities.stringvecToArr(quantargs) , 
         		new CConstrEmpty());
     }
 
@@ -167,7 +167,7 @@ public class RBNCreator {
         return new ProbFormConvComb(
         		new ProbFormCombFunc(new CombFuncNOr(), 
         		formargs, 
-        		ArrayUtilities.vecToArr(quantargs) , 
+        		ArrayUtilities.stringvecToArr(quantargs) , 
         		new CConstrEmpty()),
         		new ProbFormConstant(0.0),
         		new ProbFormConstant(1.0));

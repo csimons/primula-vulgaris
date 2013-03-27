@@ -272,7 +272,7 @@ public class SparseRelStruc extends RelStruc {
 			} // if (isOrdRel(crel)){ 
 			else { // not an OrdRel
 
-				alltrue = ArrayUtilities.vecToArr(mydata.allTrue(crel));
+				alltrue = ArrayUtilities.intarrvecToArr(mydata.allTrue(crel));
 			}
 			for (int i = 0;i<alltrue.length;i++)
 				rbnutilities.allSatisfyingTuples(((CConstrAtom)cc).arguments, alltrue[i], vars, result , dom);
