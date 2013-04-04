@@ -47,7 +47,7 @@
                     <!-- <finalName>bnt</finalName> -->
                     <archive>
                         <manifest>
-                            <mainClass>edu.pitt.sis.cls.bnt.Driver</mainClass>
+                            <mainClass>RBNgui.Primula</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
