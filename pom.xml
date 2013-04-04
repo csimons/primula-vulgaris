@@ -44,7 +44,7 @@
                         <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                     <appendAssemblyId>false</appendAssemblyId>
-                    <!-- <finalName>bnt</finalName> -->
+                    <finalName>primula-vulgaris-${project.version}</finalName>
                     <archive>
                         <manifest>
                             <mainClass>RBNgui.Primula</mainClass>
